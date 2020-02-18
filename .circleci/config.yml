@@ -1,0 +1,29 @@
+version: 2
+
+jobs:
+  public-docker:
+    docker:
+      - image: circleci/node:latest
+
+    steps:
+      - run: env
+      - run: echo $DOCKER_USERNAME
+      - run: echo $DOCKER_PASSWORD
+      - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+
+  private-docker:
+    docker:
+      - image: makotoatcci/archlinux
+        auth:
+          username: $DOCKER_USERNAME
+          password: $DOCKER_PASSWORD
+
+    steps:
+      - run: env
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - public-docker
+      - private-docker
